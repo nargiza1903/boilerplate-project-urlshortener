@@ -16,6 +16,7 @@ app.get('/', function(req, res) {
 });
 
 const urlDatabase = {}; // A simple in-memory database to store the URLs
+let counter = 0; // A counter to generate unique short URLs
 
 // Your first API endpoint
 app.get('/api/hello', function(req, res) {
@@ -28,7 +29,7 @@ app.post('/api/shorturl', function(req, res) {
   // Check if the URL is valid using dns.lookup
   dns.lookup(originalUrl, (err, address, family) => {
     if (err) {
-      return res.json({ error: 'invalid URL' });
+      return res.json({ error: 'invalid url' });
     }
 
     // Generate a unique short URL
@@ -37,8 +38,8 @@ app.post('/api/shorturl', function(req, res) {
     // Store the URL in the database
     urlDatabase[shortUrl] = originalUrl;
 
-    // Respond with the short URL
-    res.json({ short_url: shortUrl });
+    // Respond with the short URL and original URL
+    res.json({ original_url: originalUrl, short_url: shortUrl });
   });
 });
 
@@ -50,7 +51,7 @@ app.get('/api/shorturl/:shortUrl', function(req, res) {
     // Redirect to the original URL
     res.redirect(originalUrl);
   } else {
-    res.status(404).json({ error: 'short URL not found' });
+    res.json({ error: 'short URL not found' });
   }
 });
 
@@ -59,7 +60,6 @@ app.listen(port, function() {
 });
 
 function generateShortUrl() {
-  // This function should generate a unique short URL, you can use any logic you prefer.
-  // For simplicity, let's just use a random 4-digit number here.
-  return Math.floor(1000 + Math.random() * 9000).toString();
+  // Generate a unique short URL using a simple counter and increment it for each new URL
+  return (++counter).toString();
 }
