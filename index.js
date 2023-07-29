@@ -38,7 +38,7 @@ app.post('/api/shorturl', function(req, res) {
     urlDatabase[shortUrl] = originalUrl;
 
     // Respond with the short URL
-    res.json({ original_url: originalUrl, short_url: shortUrl });
+    res.json({ short_url: shortUrl });
   });
 });
 
@@ -50,7 +50,7 @@ app.get('/api/shorturl/:shortUrl', function(req, res) {
     // Redirect to the original URL
     res.redirect(originalUrl);
   } else {
-    res.json({ error: 'short URL not found' });
+    res.status(404).json({ error: 'short URL not found' });
   }
 });
 
